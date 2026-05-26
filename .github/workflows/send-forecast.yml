@@ -1,20 +1,21 @@
-name: Send daily lunar forecast
+name: Send Daily Card
 
 on:
   schedule:
-    - cron: '0 18 * * *'
+    - cron: '0 4 * * *'   # 4:00 UTC = 7:00 МСК
   workflow_dispatch:
 
 jobs:
-  send:
+  send-card:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
-      - run: npm install
-      - run: node index.js
+      - run: npm ci
+      - name: Send card
+        run: node index.js
         env:
           BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
           CHAT_ID: ${{ secrets.CHAT_ID }}
