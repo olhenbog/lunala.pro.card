@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Карта дня | Метафорические карты</title>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+            background: #f7f5f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+        .card-container {
+            max-width: 600px;
+            background: white;
+            border-radius: 32px;
+            box-shadow: 0 20px 35px -10px rgba(0,0,0,0.1);
+            overflow: hidden;
+            text-align: center;
+            padding: 20px;
+        }
+        img {
+            max-width: 100%;
+            border-radius: 24px;
+            margin-bottom: 20px;
+        }
+        h1 {
+            font-size: 1.8rem;
+            margin: 0 0 8px 0;
+            color: #2c3e2f;
+        }
+        p {
+            color: #4a5b4e;
+            margin-bottom: 24px;
+        }
+        .refresh-btn {
+            background: #d9c9a3;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 40px;
+            font-size: 1rem;
+            cursor: pointer;
+            color: #2c3e2f;
+            font-weight: 500;
+            transition: 0.2s;
+        }
+        .refresh-btn:hover {
+            background: #cbb986;
+        }
+        .footer {
+            margin-top: 24px;
+            font-size: 0.8rem;
+            color: #8b9a8b;
+        }
+    </style>
+</head>
+<body>
+<div class="card-container">
+    <h1>✨ Карта дня ✨</h1>
+    <p>Метафорическая подсказка на сегодня</p>
+    <div id="cardImage">
+        <img src="" alt="Загрузка карты..." style="min-height: 300px;">
+    </div>
+    <button class="refresh-btn" onclick="location.reload();">🎲 Обновить (та же карта дня)</button>
+    <div class="footer">
+        Карта обновляется автоматически каждое утро в 7:00 МСК
+    </div>
+</div>
+
+<script>
+    async function loadCard() {
+        try {
+            const response = await fetch('today.json?v=' + new Date().toDateString());
+            if (!response.ok) throw new Error('Нет today.json');
+            const data = await response.json();
+            const cardFile = data.todayCard;
+            if (cardFile) {
+                const imgElement = document.querySelector('#cardImage img');
+                imgElement.src = cardFile;
+                imgElement.alt = 'Метафорическая карта дня';
+            } else {
+                document.getElementById('cardImage').innerHTML = '<p>Карта не найдена</p>';
+            }
+        } catch (err) {
+            console.error(err);
+            document.getElementById('cardImage').innerHTML = '<p>Не удалось загрузить карту дня. Попробуйте позже.</p>';
+        }
+    }
+    loadCard();
+</script>
+</body>
+</html>
