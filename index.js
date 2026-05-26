@@ -51,7 +51,7 @@ async function main() {
     
     const randomIndex = Math.floor(Math.random() * pngFiles.length);
     const selected = pngFiles[randomIndex];
-    const cardPath = path.join(CARDS_DIR, selected);
+    const cardPath = __dirname;
     await log(`🎲 Выбрана карта: ${selected}, полный путь: ${cardPath}`);
     
     // Проверяем существование файла
