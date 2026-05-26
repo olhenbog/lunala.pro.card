@@ -2,7 +2,7 @@ name: Send Daily Card
 
 on:
   schedule:
-    - cron: '0 4 * * *'   # 4:00 UTC = 7:00 МСК
+    - cron: '0 4 * * *'
   workflow_dispatch:
 
 jobs:
@@ -14,8 +14,22 @@ jobs:
         with:
           node-version: '20'
       - run: npm install
-      - name: Send card
+      - name: Send card to Telegram
         run: node index.js
         env:
           BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
           CHAT_ID: ${{ secrets.CHAT_ID }}
+      - name: Update today.json for website
+        run: |
+          # Найти случайный PNG из корня
+          CARD=$(ls *.png 2>/dev/null | sort -R | head -n 1)
+          if [ -z "$CARD" ]; then
+            echo "No PNG found"
+            exit 1
+          fi
+          echo "{\"todayCard\": \"$CARD\"}" > today.json
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git add today.json
+          git commit -m "Update daily card: $CARD" || echo "No changes"
+          git push
