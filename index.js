@@ -1,5 +1,5 @@
-const fs = require('fs');
-console.log('📁 Содержимое корня:');
-fs.readdirSync('.').forEach(file => {
-    console.log(' -', file);
-});
+const { Telegraf } = require('telegraf');
+const bot = new Telegraf(process.env.BOT_TOKEN);
+bot.telegram.sendMessage(process.env.CHAT_ID, 'Привет! Бот работает.')
+  .then(() => console.log('Сообщение отправлено'))
+  .catch(err => console.error('Ошибка:', err.message));
